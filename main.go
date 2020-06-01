@@ -1,6 +1,10 @@
 package main
 
 import (
+	"github.com/arttor/spoty-paty-bot/config"
+	"github.com/arttor/spoty-paty-bot/service"
+	"github.com/arttor/spoty-paty-bot/spotify"
+	"github.com/arttor/spoty-paty-bot/state"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/sirupsen/logrus"
 	"log"
@@ -9,39 +13,48 @@ import (
 )
 
 func main() {
-	conf, err := readConfig()
+	conf, err := app.ReadConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	bot, err := tgbotapi.NewBotAPI(conf.token)
+	//db := setupDB()
+	//defer func() {
+	//	logrus.Error(db.Close())
+	//}()
+	stateSvc:=state.New(conf,nil)
+	spotifySvc:=spotify.New(conf,stateSvc)
+	bot, err := tgbotapi.NewBotAPI(conf.Token)
 	if err != nil {
 		logrus.WithError(err).Fatal("Unable to register bot with token")
 	}
-	logrus.SetLevel(logrus.DebugLevel)
-	bot.Debug = true
-	logrus.Printf("Authorized on account %s", bot.Self.UserName)
-	_, err = bot.SetWebhook(tgbotapi.NewWebhook(conf.webHookBaseURL + "/" + bot.Token))
+	router:=service.New(stateSvc,spotifySvc,bot)
+	app.SetupLog(bot)
+	logrus.Infof("Authorized on account %s", bot.Self.UserName)
+	_, err = bot.SetWebhook(tgbotapi.NewWebhook(conf.BaseURL + "/" + bot.Token))
 	if err != nil {
-		logrus.WithError(err).Fatal("Unable to register webhook")
+		logrus.WithError(err).Fatal("Unable to register web-hook")
 	}
 	info, err := bot.GetWebhookInfo()
 	if err != nil {
-		logrus.WithError(err).Fatal("Unable to ge webhook info")
+		logrus.WithError(err).Fatal("Unable to ge web-hook info")
 	}
 	if info.LastErrorDate != 0 {
 		logrus.Warnf("Telegram callback failed: %s", info.LastErrorMessage)
 	}
 	updates := bot.ListenForWebhook("/" + bot.Token)
 	go func() {
-		logrus.Error(http.ListenAndServe("0.0.0.0:"+conf.port, nil))
+		logrus.Error(http.ListenAndServe("0.0.0.0:"+conf.Port, nil))
 	}()
 	time.Sleep(time.Millisecond * 500)
 	updates.Clear()
 	for update := range updates {
+		if update.Message == nil {
+			continue
+		}
 		log.Printf("%+v\n", update)
 		if update.Message != nil {
 			log.Printf("msg: %+v\n", *update.Message)
 		}
+		router.Handle(update)
 	}
 }
