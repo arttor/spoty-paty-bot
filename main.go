@@ -33,6 +33,7 @@ func main() {
 	}
 	updates := bot.ListenForWebhook("/" + bot.Token)
 	go func() {
+		http.HandleFunc("/", health)
 		logrus.Error(http.ListenAndServe("0.0.0.0:"+serverPort, nil))
 	}()
 	for update := range updates {
