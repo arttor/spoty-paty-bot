@@ -13,6 +13,7 @@ import (
 )
 
 func main() {
+	logrus.Info("Starting bot app...")
 	conf, err := app.ReadConfig()
 	if err != nil {
 		log.Fatal(err)
@@ -28,6 +29,7 @@ func main() {
 		logrus.WithError(err).Fatal("Unable to register bot with token")
 	}
 	router:=service.New(stateSvc,spotifySvc,bot)
+	logrus.Info("All services started")
 	app.SetupLog(bot)
 	logrus.Infof("Authorized on account %s", bot.Self.UserName)
 	_, err = bot.SetWebhook(tgbotapi.NewWebhook(conf.BaseURL + "/" + bot.Token))
@@ -42,11 +44,13 @@ func main() {
 		logrus.Warnf("Telegram callback failed: %s", info.LastErrorMessage)
 	}
 	updates := bot.ListenForWebhook("/" + bot.Token)
+	http.HandleFunc(spotify.Callback, spotifySvc.RedirectHandler)
 	go func() {
 		logrus.Error(http.ListenAndServe("0.0.0.0:"+conf.Port, nil))
 	}()
 	time.Sleep(time.Millisecond * 500)
 	updates.Clear()
+	logrus.Info("Listening for updates...")
 	for update := range updates {
 		if update.Message == nil {
 			continue

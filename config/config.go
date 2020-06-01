@@ -27,7 +27,7 @@ func ReadConfig() (Config, error) {
 	if res.Port == "" {
 		res.Port = defaultPort
 	}
-	res.BaseURL = os.Getenv("TG_BOT_WEB_HOOK")
+	res.BaseURL = os.Getenv("TG_BOT_URL")
 	if res.BaseURL == "" {
 		return res, errors.New("web hook base url not specified")
 	}
