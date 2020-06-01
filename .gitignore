@@ -1,0 +1,14 @@
+### Go template
+# Binaries for programs and plugins
+.DS_Store
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+/.idea/
+vendor/
+.env
+build/
+*.iml
