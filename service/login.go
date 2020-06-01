@@ -31,8 +31,8 @@ func (s *login) Accepts(update tgbotapi.Update) bool {
 }
 
 func (s *login) handle(update tgbotapi.Update) {
-	_, err := s.stateSvc.Get(update.Message.Chat.ID)
-	if err != nil {
+	chat, err := s.stateSvc.Get(update.Message.Chat.ID)
+	if err != nil || chat.SpotifyToken == "" {
 		s.login(update)
 	} else {
 		s.alreadyLoggedIn(update)
