@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	serverPort      = "8080"
+	defaultPort     = "8080"
 	tokenFlagName   = "token"
 	tokenEnvName    = "TG_BOT_TOKEN"
 	webHookFlagName = "wh"
@@ -17,10 +17,15 @@ const (
 type config struct {
 	webHookBaseURL string
 	token          string
+	port           string
 }
 
 func readConfig() (config, error) {
 	res := config{}
+	res.port = os.Getenv("PORT")
+	if res.port == "" {
+		res.port = defaultPort
+	}
 	host := flag.String(webHookFlagName, "", "web hook base url")
 	token := flag.String(tokenFlagName, "", "telegram bot token")
 	flag.Parse()
