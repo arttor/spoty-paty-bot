@@ -5,6 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"log"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -35,7 +36,12 @@ func main() {
 	go func() {
 		logrus.Error(http.ListenAndServe("0.0.0.0:"+conf.port, nil))
 	}()
+	time.Sleep(time.Millisecond * 500)
+	updates.Clear()
 	for update := range updates {
 		log.Printf("%+v\n", update)
+		if update.Message != nil {
+			log.Printf("msg: %+v\n", *update.Message)
+		}
 	}
 }
