@@ -39,8 +39,8 @@ func ReadConfig() (Config, error) {
 	if res.SpotifyClientID == "" {
 		return res, errors.New("SpotifyClientID not specified")
 	}
-	res.SpotifyClientID = os.Getenv("SPOTIFY_CLIENT_SECRET")
-	if res.SpotifyClientID == "" {
+	res.SpotifyClientSecret = os.Getenv("SPOTIFY_CLIENT_SECRET")
+	if res.SpotifyClientSecret == "" {
 		return res, errors.New("SpotifyClientSecret not specified")
 	}
 	return res, nil
