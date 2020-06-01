@@ -18,7 +18,7 @@ type Service struct {
 }
 
 func New(config app.Config, state *state.Service) *Service {
-	auth := spotify.NewAuthenticator(config.BaseURL+Callback, spotify.ScopeStreaming, spotify.ScopeUserReadCurrentlyPlaying, spotify.ScopeUserReadPlaybackState, spotify.ScopeUserModifyPlaybackState)
+	auth := spotify.NewAuthenticator(config.BaseURL+Callback+"/", spotify.ScopeStreaming, spotify.ScopeUserReadCurrentlyPlaying, spotify.ScopeUserReadPlaybackState, spotify.ScopeUserModifyPlaybackState)
 	auth.SetAuthInfo(config.SpotifyClientID, config.SpotifyClientSecret)
 	return &Service{config: config, state: state, auth: &auth}
 }
