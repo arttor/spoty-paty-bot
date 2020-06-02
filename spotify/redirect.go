@@ -8,8 +8,13 @@ import (
 )
 
 func (s *Service) RedirectHandler(w http.ResponseWriter, r *http.Request) {
-	state := r.URL.Query().Get("state")
-	// use the same state string here that you used to generate the URL
+	keys, ok := r.URL.Query()["state"]
+	if !ok || len(keys[0]) < 1 {
+		logrus.Error("Url Param 'state' is missing")
+		http.Error(w, "Url Param 'state' is missing", http.StatusBadRequest)
+		return
+	}
+	state := keys[0]
 	token, err := s.auth.Token(state, r)
 	if err != nil {
 		logrus.WithError(err).Error("Unable to get access token from code")
