@@ -5,6 +5,7 @@ import (
 	"errors"
 	app "github.com/arttor/spoty-paty-bot/config"
 	"github.com/jmoiron/sqlx"
+	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2"
 	"sync"
 )
@@ -20,7 +21,7 @@ func New(config app.Config, db *sqlx.DB) *Service {
 	return &Service{config: config, db: db, mem: make(map[int64]Chat)}
 }
 
-func (s *Service) SaveToken(chatID int64, token *oauth2.Token) error {
+func (s *Service) SaveClient(chatID int64, token *oauth2.Token, client *spotify.Client) error {
 	s.m.Lock()
 	defer s.m.Unlock()
 	chat, ok := s.mem[chatID]
@@ -32,6 +33,7 @@ func (s *Service) SaveToken(chatID int64, token *oauth2.Token) error {
 		return err
 	}
 	chat.SpotifyToken = string(tokenBytes)
+	chat.SpotifyClient = client
 	s.mem[chatID] = chat
 	return nil
 }
@@ -46,12 +48,23 @@ func (s *Service) AddIfExists(chat Chat) error {
 	return nil
 }
 
-func (s *Service) Get(chatID int64) (Chat,error) {
+func (s *Service) Get(chatID int64) (Chat, error) {
 	s.m.RLock()
 	defer s.m.RUnlock()
 	chat, ok := s.mem[chatID]
 	if !ok {
-		return Chat{},errors.New("not found")
+		return Chat{}, errors.New("not found")
 	}
-	return chat,nil
+	return chat, nil
+}
+
+func (s *Service) RemoveClient(chatID int64) {
+	s.m.Lock()
+	defer s.m.Unlock()
+	chat, ok := s.mem[chatID]
+	if ok {
+		chat.SpotifyToken = ""
+		chat.SpotifyClient = nil
+		s.mem[chatID] = chat
+	}
 }

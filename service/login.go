@@ -16,7 +16,7 @@ type login struct {
 }
 
 func (s *login) Handle(update tgbotapi.Update) () {
-	if s.Accepts(update) {
+	if s.accepts(update) {
 		s.handle(update)
 		return
 	}
@@ -26,7 +26,7 @@ func (s *login) Handle(update tgbotapi.Update) () {
 	}
 	logrus.Info("No handler for given update")
 }
-func (s *login) Accepts(update tgbotapi.Update) bool {
+func (s *login) accepts(update tgbotapi.Update) bool {
 	return update.Message.IsCommand() && update.Message.Command() == "login"
 }
 
@@ -41,7 +41,10 @@ func (s *login) handle(update tgbotapi.Update) {
 
 func (s *login) login(update tgbotapi.Update) {
 	url := s.spotifySvc.GetAuthURL(update.Message.Chat.ID)
-	response := tgbotapi.NewMessage(update.Message.Chat.ID, url)
+	response := tgbotapi.NewMessage(update.Message.Chat.ID, "")
+	response.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup(tgbotapi.NewInlineKeyboardRow(
+		tgbotapi.NewInlineKeyboardButtonURL("Login into Spotify account",url),
+	))
 	_, err := s.bot.Send(response)
 	if err != nil {
 		logrus.WithError(err).Error("Unable to send log in request")

@@ -8,7 +8,11 @@ import (
 
 func New(stateSvc *state.Service, spotifySvc *spotify.Service, bot *bot.BotAPI) Handler {
 	return &login{
-		next:       nil,
+		next: &logout{
+			next:     nil,
+			stateSvc: stateSvc,
+			bot:      bot,
+		},
 		stateSvc:   stateSvc,
 		spotifySvc: spotifySvc,
 		bot:        bot,
