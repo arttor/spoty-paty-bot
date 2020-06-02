@@ -22,13 +22,13 @@ func main() {
 	//defer func() {
 	//	logrus.Error(db.Close())
 	//}()
-	stateSvc:=state.New(conf,nil)
-	spotifySvc:=spotify.New(conf,stateSvc)
 	bot, err := tgbotapi.NewBotAPI(conf.Token)
 	if err != nil {
 		logrus.WithError(err).Fatal("Unable to register bot with token")
 	}
-	router:=service.New(stateSvc,spotifySvc,bot)
+	stateSvc := state.New(conf, nil)
+	spotifySvc := spotify.New(conf, stateSvc, bot)
+	router := service.New(stateSvc, spotifySvc, bot)
 	logrus.Info("All services started")
 	app.SetupLog(bot)
 	logrus.Infof("Authorized on account %s", bot.Self.UserName)
@@ -52,9 +52,9 @@ func main() {
 	updates.Clear()
 	logrus.Info("Listening for updates...")
 	for update := range updates {
-		if update.Message == nil {
-			continue
-		}
+		//if update.Message == nil {
+		//	continue
+		//}
 		log.Printf("%+v\n", update)
 		if update.Message != nil {
 			log.Printf("msg: %+v\n", *update.Message)

@@ -17,7 +17,11 @@ type login struct {
 
 func (s *login) Handle(update tgbotapi.Update) () {
 	if s.accepts(update) {
-		s.handle(update)
+		if update.Message.IsCommand() {
+			s.handleCommand(update)
+		} else {
+			s.handleCallback(update)
+		}
 		return
 	}
 	if s.next != nil {
@@ -27,10 +31,10 @@ func (s *login) Handle(update tgbotapi.Update) () {
 	logrus.Info("No handler for given update")
 }
 func (s *login) accepts(update tgbotapi.Update) bool {
-	return update.Message.IsCommand() && update.Message.Command() == "login"
+	return (update.Message.IsCommand() && update.Message.Command() == "login") || (update.CallbackQuery != nil && update.CallbackQuery.Data == "login")
 }
 
-func (s *login) handle(update tgbotapi.Update) {
+func (s *login) handleCommand(update tgbotapi.Update) {
 	chat, err := s.stateSvc.Get(update.Message.Chat.ID)
 	if err != nil || chat.SpotifyToken == "" {
 		s.login(update)
@@ -39,11 +43,24 @@ func (s *login) handle(update tgbotapi.Update) {
 	}
 }
 
+func (s *login) handleCallback(update tgbotapi.Update) {
+	logrus.Infof("CALLBACK LOGIN FROM %s", update.CallbackQuery.From.UserName)
+	resp, err := s.bot.AnswerCallbackQuery(tgbotapi.NewCallbackWithAlert(update.CallbackQuery.ID, update.CallbackQuery.Data))
+	if err!=nil{
+		logrus.WithError(err).Error("Login Callback response erro")
+	}else {
+		logrus.Infof("CALBACK login response of response %v",resp.Description)
+	}
+}
+
 func (s *login) login(update tgbotapi.Update) {
 	url := s.spotifySvc.GetAuthURL(update.Message.Chat.ID)
 	response := tgbotapi.NewMessage(update.Message.Chat.ID, "Please grant access to play songs")
+	btn := tgbotapi.NewInlineKeyboardButtonURL("Login into Spotify account", url)
+	callbackData := "login"
+	btn.CallbackData = &callbackData
 	response.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup(tgbotapi.NewInlineKeyboardRow(
-		tgbotapi.NewInlineKeyboardButtonURL("Login into Spotify account",url),
+		btn,
 	))
 	_, err := s.bot.Send(response)
 	if err != nil {
