@@ -31,7 +31,7 @@ func (s *login) Handle(update tgbotapi.Update) () {
 	logrus.Info("No handler for given update")
 }
 func (s *login) accepts(update tgbotapi.Update) bool {
-	return (update.Message.IsCommand() && update.Message.Command() == "login") || (update.CallbackQuery != nil && update.CallbackQuery.Data == "login")
+	return (update.Message.IsCommand() && update.Message.Command() == "login") || (update.CallbackQuery != nil )
 }
 
 func (s *login) handleCommand(update tgbotapi.Update) {
