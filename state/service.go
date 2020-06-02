@@ -96,7 +96,7 @@ func (s *Service) FinishLogin(update bot.Update, code string) error {
 	}
 	chat.DjClient = chat.LoginCandidates[code]
 	chat.DjID = update.Message.From.ID
-	chat.DjName = update.Message.From.UserName
+	chat.DjName = update.Message.From.String()
 	chat.LoginCandidates = nil
 	s.mem[chatID] = chat
 	return nil

@@ -25,7 +25,7 @@ func (s *logout) Handle(update bot.Update) () {
 	logrus.Info("No handler for given update")
 }
 func (s *logout) accepts(update bot.Update) bool {
-	return update.Message.IsCommand() && update.Message.Command() == "logout"
+	return update.Message.IsCommand() && update.Message.Command() == res.CmdLogout
 }
 
 func (s *logout) handle(update bot.Update) {

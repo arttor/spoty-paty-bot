@@ -54,7 +54,6 @@ func main() {
 			continue
 		}
 		log.Printf("%+v\n", update)
-		log.Printf("------------- username %v fm %v lm%v\n", update.Message.From.UserName, update.Message.From.FirstName, update.Message.From.LastName)
 		if update.Message != nil {
 			log.Printf("msg: %+v\n", *update.Message)
 		}

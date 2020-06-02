@@ -19,6 +19,6 @@ const (
 // BOT COMMANDS
 const (
 	CmdLogin  = "login"
-	CmdLoginFinish = "i_am_DJ_now"
+	CmdLoginFinish = "becameDj"
 	CmdLogout = "logout"
 )

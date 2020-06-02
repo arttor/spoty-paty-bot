@@ -2,6 +2,7 @@ package spotify
 
 import (
 	"fmt"
+	"github.com/arttor/spoty-paty-bot/res"
 	"github.com/sirupsen/logrus"
 	"html/template"
 	"net/http"
@@ -9,8 +10,7 @@ import (
 )
 
 const (
-	FinishLoginCommandPattern = "/" + FinishLoginCommand + " %s"
-	FinishLoginCommand        = "i_am_DJ_now"
+	FinishLoginCommandPattern = "/" + res.CmdLoginFinish + " %s"
 )
 
 func (s *Service) RedirectHandler(w http.ResponseWriter, r *http.Request) {

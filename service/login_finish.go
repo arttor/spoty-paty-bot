@@ -36,7 +36,7 @@ func (s *loginFinish) handle(update bot.Update) {
 	if err != nil {
 		msg = bot.NewMessage(update.Message.Chat.ID, err.Error())
 	} else {
-		msg = bot.NewMessage(update.Message.Chat.ID, fmt.Sprintf(res.TxtFinishLoginSuccessPattern, update.Message.From.UserName))
+		msg = bot.NewMessage(update.Message.Chat.ID, fmt.Sprintf(res.TxtFinishLoginSuccessPattern, update.Message.From.String()))
 	}
 	_, err = s.bot.Send(msg)
 	if err != nil {
