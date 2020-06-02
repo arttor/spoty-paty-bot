@@ -1,6 +1,7 @@
 package spotify
 
 import (
+	"fmt"
 	app "github.com/arttor/spoty-paty-bot/config"
 	"github.com/arttor/spoty-paty-bot/state"
 	"github.com/zmb3/spotify"
@@ -28,5 +29,6 @@ func (s *Service) GetAuthURL(chatID int64) string {
 		Id:       chatID,
 		MaxSongs: app.DefaultMaxSongs,
 	})
+	fmt.Printf("==========%v --%v",strconv.FormatInt(chatID, 10),chatID)
 	return s.auth.AuthURLWithDialog(strconv.FormatInt(chatID, 10))
 }

@@ -14,6 +14,7 @@ func (s *Service) RedirectHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Url Param 'state' is missing", http.StatusBadRequest)
 		return
 	}
+	fmt.Printf("------------ %+v", keys)
 	state := keys[0]
 	token, err := s.auth.Token(state, r)
 	if err != nil {
