@@ -9,4 +9,5 @@ type Chat struct {
 	DjID            int
 	DjName          string
 	LoginCandidates map[string]*spotify.Client
+	Queue           map[string]int
 }

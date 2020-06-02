@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	defaultPort = "8080"
-	logLvl      = "info"
-	DefaultMaxSongs      = 3
+	defaultPort     = "8080"
+	logLvl          = "info"
+	DefaultMaxSongs = 3
 )
 
 type Config struct {
