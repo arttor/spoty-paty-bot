@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	Callback = "/spotify/callback"
+	Callback = "/spotify/callback/"
 )
 
 type Service struct {
@@ -18,7 +18,7 @@ type Service struct {
 }
 
 func New(config app.Config, state *state.Service) *Service {
-	auth := spotify.NewAuthenticator(config.BaseURL+Callback+"/", spotify.ScopeStreaming, spotify.ScopeUserReadCurrentlyPlaying, spotify.ScopeUserReadPlaybackState, spotify.ScopeUserModifyPlaybackState)
+	auth := spotify.NewAuthenticator(config.BaseURL+Callback, spotify.ScopeStreaming, spotify.ScopeUserReadCurrentlyPlaying, spotify.ScopeUserReadPlaybackState, spotify.ScopeUserModifyPlaybackState)
 	auth.SetAuthInfo(config.SpotifyClientID, config.SpotifyClientSecret)
 	return &Service{config: config, state: state, auth: &auth}
 }
@@ -28,5 +28,5 @@ func (s *Service) GetAuthURL(chatID int64) string {
 		Id:       chatID,
 		MaxSongs: app.DefaultMaxSongs,
 	})
-	return s.auth.AuthURL(strconv.FormatInt(chatID, 10))
+	return s.auth.AuthURLWithDialog(strconv.FormatInt(chatID, 10))
 }

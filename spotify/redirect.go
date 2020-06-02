@@ -1,6 +1,7 @@
 package spotify
 
 import (
+	"fmt"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
@@ -29,4 +30,5 @@ func (s *Service) RedirectHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(200)
+	_, _ = fmt.Fprintf(w, "Authenticated!")
 }

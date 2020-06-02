@@ -41,7 +41,7 @@ func (s *login) handle(update tgbotapi.Update) {
 
 func (s *login) login(update tgbotapi.Update) {
 	url := s.spotifySvc.GetAuthURL(update.Message.Chat.ID)
-	response := tgbotapi.NewMessage(update.Message.Chat.ID, "Pres button to login:")
+	response := tgbotapi.NewMessage(update.Message.Chat.ID, "Please grant access to play songs")
 	response.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup(tgbotapi.NewInlineKeyboardRow(
 		tgbotapi.NewInlineKeyboardButtonURL("Login into Spotify account",url),
 	))
