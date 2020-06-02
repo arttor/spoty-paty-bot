@@ -14,7 +14,6 @@ func (s *Service) RedirectHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Url Param 'state' is missing", http.StatusBadRequest)
 		return
 	}
-	fmt.Printf("------------ %+v", keys)
 	state := keys[0]
 	token, err := s.auth.Token(state, r)
 	if err != nil {
@@ -23,14 +22,14 @@ func (s *Service) RedirectHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	n, err := strconv.ParseInt(state, 10, 64)
-	if err == nil {
+	if err != nil {
 		logrus.WithError(err).Error("Unable to convert state")
 		http.Error(w, "Couldn't get token", http.StatusNotFound)
 		return
 	}
 	client := s.auth.NewClient(token)
 	err = s.state.SaveClient(n, token, &client)
-	if err == nil {
+	if err != nil {
 		logrus.WithError(err).Error("Unable to save token")
 		http.Error(w, "Couldn't get token", http.StatusNotFound)
 		return
