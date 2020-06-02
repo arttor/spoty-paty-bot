@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+	"github.com/arttor/spoty-paty-bot/res"
 	"github.com/arttor/spoty-paty-bot/spotify"
 	"github.com/arttor/spoty-paty-bot/state"
 	bot "github.com/go-telegram-bot-api/telegram-bot-api"
@@ -17,11 +19,7 @@ type login struct {
 
 func (s *login) Handle(update tgbotapi.Update) () {
 	if s.accepts(update) {
-		if update.Message.IsCommand() {
-			s.handleCommand(update)
-		} else {
-			s.handleCallback(update)
-		}
+		s.handleCommand(update)
 		return
 	}
 	if s.next != nil {
@@ -31,36 +29,23 @@ func (s *login) Handle(update tgbotapi.Update) () {
 	logrus.Info("No handler for given update")
 }
 func (s *login) accepts(update tgbotapi.Update) bool {
-	return (update.Message.IsCommand() && update.Message.Command() == "login") || (update.CallbackQuery != nil )
+	return update.Message.IsCommand() && update.Message.Command() == res.CmdLogin
 }
 
 func (s *login) handleCommand(update tgbotapi.Update) {
-	chat, err := s.stateSvc.Get(update.Message.Chat.ID)
-	if err != nil || chat.SpotifyToken == "" {
+	chat, _ := s.stateSvc.Get(update.Message.Chat.ID)
+	if chat.DjID == 0 {
 		s.login(update)
 	} else {
-		s.alreadyLoggedIn(update)
-	}
-}
-
-func (s *login) handleCallback(update tgbotapi.Update) {
-	logrus.Infof("CALLBACK LOGIN FROM %s", update.CallbackQuery.From.UserName)
-	resp, err := s.bot.AnswerCallbackQuery(tgbotapi.NewCallbackWithAlert(update.CallbackQuery.ID, update.CallbackQuery.Data))
-	if err!=nil{
-		logrus.WithError(err).Error("Login Callback response erro")
-	}else {
-		logrus.Infof("CALBACK login response of response %v",resp.Description)
+		s.alreadyLoggedIn(update, chat)
 	}
 }
 
 func (s *login) login(update tgbotapi.Update) {
 	url := s.spotifySvc.GetAuthURL(update.Message.Chat.ID)
-	response := tgbotapi.NewMessage(update.Message.Chat.ID, "Please grant access to play songs")
-	btn := tgbotapi.NewInlineKeyboardButtonURL("Login into Spotify account", url)
-	callbackData := "login"
-	btn.CallbackData = &callbackData
+	response := tgbotapi.NewMessage(update.Message.Chat.ID, res.TxtLoginInfo)
 	response.ReplyMarkup = tgbotapi.NewInlineKeyboardMarkup(tgbotapi.NewInlineKeyboardRow(
-		btn,
+		tgbotapi.NewInlineKeyboardButtonURL(res.TxtLoginBtn, url),
 	))
 	_, err := s.bot.Send(response)
 	if err != nil {
@@ -68,8 +53,8 @@ func (s *login) login(update tgbotapi.Update) {
 	}
 }
 
-func (s *login) alreadyLoggedIn(update tgbotapi.Update) {
-	response := tgbotapi.NewMessage(update.Message.Chat.ID, "Already logged in")
+func (s *login) alreadyLoggedIn(update tgbotapi.Update, chat state.Chat) {
+	response := tgbotapi.NewMessage(update.Message.Chat.ID, fmt.Sprintf(res.TxtLoginAlreadyPattern, chat.DjName))
 	_, err := s.bot.Send(response)
 	if err != nil {
 		logrus.WithError(err).Error("Unable to send already logged in response")

@@ -8,20 +8,18 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/sirupsen/logrus"
 	"log"
+	"math/rand"
 	"net/http"
 	"time"
 )
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
 	logrus.Info("Starting bot app...")
 	conf, err := app.ReadConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
-	//db := setupDB()
-	//defer func() {
-	//	logrus.Error(db.Close())
-	//}()
 	bot, err := tgbotapi.NewBotAPI(conf.Token)
 	if err != nil {
 		logrus.WithError(err).Fatal("Unable to register bot with token")
@@ -52,10 +50,11 @@ func main() {
 	updates.Clear()
 	logrus.Info("Listening for updates...")
 	for update := range updates {
-		//if update.Message == nil {
-		//	continue
-		//}
+		if update.Message == nil {
+			continue
+		}
 		log.Printf("%+v\n", update)
+		log.Printf("------------- username %v fm %v lm%v\n", update.Message.From.UserName, update.Message.From.FirstName, update.Message.From.LastName)
 		if update.Message != nil {
 			log.Printf("msg: %+v\n", *update.Message)
 		}

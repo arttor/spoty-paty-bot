@@ -26,7 +26,7 @@ func New(config app.Config, state *state.Service, bot *bot.BotAPI) *Service {
 }
 
 func (s *Service) GetAuthURL(chatID int64) string {
-	_ = s.state.AddIfExists(state.Chat{
+	s.state.AddIfNotExists(state.Chat{
 		Id:       chatID,
 		MaxSongs: app.DefaultMaxSongs,
 	})

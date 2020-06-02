@@ -3,8 +3,14 @@ package spotify
 import (
 	"fmt"
 	"github.com/sirupsen/logrus"
+	"html/template"
 	"net/http"
 	"strconv"
+)
+
+const (
+	FinishLoginCommandPattern = "/" + FinishLoginCommand + " %s"
+	FinishLoginCommand        = "i_am_DJ_now"
 )
 
 func (s *Service) RedirectHandler(w http.ResponseWriter, r *http.Request) {
@@ -28,12 +34,22 @@ func (s *Service) RedirectHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	client := s.auth.NewClient(token)
-	err = s.state.SaveClient(n, token, &client)
+	code, err := s.state.SaveClient(n, &client)
 	if err != nil {
 		logrus.WithError(err).Error("Unable to save token")
-		http.Error(w, "Couldn't get token", http.StatusNotFound)
+		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
-	w.WriteHeader(200)
-	_, _ = fmt.Fprintf(w, "Authenticated!")
+	tmpl, err := template.ParseFiles("res/login.html")
+	if err != nil {
+		logrus.WithError(err).Error("Error parsing login template")
+		http.Error(w, "Login error", http.StatusNotFound)
+		return
+	}
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	err = tmpl.Execute(w, ViewData{LoginCommand: fmt.Sprintf(FinishLoginCommandPattern, code)})
+}
+
+type ViewData struct {
+	LoginCommand string
 }

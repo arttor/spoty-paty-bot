@@ -1,19 +1,20 @@
 package service
 
 import (
+	"fmt"
 	"github.com/arttor/spoty-paty-bot/res"
 	"github.com/arttor/spoty-paty-bot/state"
 	bot "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/sirupsen/logrus"
 )
 
-type logout struct {
-	next     Handler
+type loginFinish struct {
 	stateSvc *state.Service
 	bot      *bot.BotAPI
+	next     Handler
 }
 
-func (s *logout) Handle(update bot.Update) () {
+func (s *loginFinish) Handle(update bot.Update) () {
 	if s.accepts(update) {
 		s.handle(update)
 		return
@@ -24,17 +25,18 @@ func (s *logout) Handle(update bot.Update) () {
 	}
 	logrus.Info("No handler for given update")
 }
-func (s *logout) accepts(update bot.Update) bool {
-	return update.Message.IsCommand() && update.Message.Command() == "logout"
+func (s *loginFinish) accepts(update bot.Update) bool {
+	return update.Message.IsCommand() && update.Message.Command() == res.CmdLoginFinish
 }
 
-func (s *logout) handle(update bot.Update) {
-	err := s.stateSvc.Logout(update)
+func (s *loginFinish) handle(update bot.Update) {
+	loginCode := update.Message.CommandArguments()
+	err := s.stateSvc.FinishLogin(update, loginCode)
 	var msg bot.MessageConfig
 	if err != nil {
 		msg = bot.NewMessage(update.Message.Chat.ID, err.Error())
 	} else {
-		msg = bot.NewMessage(update.Message.Chat.ID, res.TxtLogoutSuccess)
+		msg = bot.NewMessage(update.Message.Chat.ID, fmt.Sprintf(res.TxtFinishLoginSuccessPattern, update.Message.From.UserName))
 	}
 	_, err = s.bot.Send(msg)
 	if err != nil {
