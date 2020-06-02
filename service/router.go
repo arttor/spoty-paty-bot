@@ -17,7 +17,11 @@ func New(stateSvc *state.Service, spotifySvc *spotify.Service, bot *bot.BotAPI) 
 			next: &loginFinish{
 				stateSvc: stateSvc,
 				bot:      bot,
-				next:     nil,
+				next:     &songLink{
+					next:     nil,
+					stateSvc: stateSvc,
+					bot:      bot,
+				},
 			},
 		},
 	}
