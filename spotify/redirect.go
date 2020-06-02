@@ -21,7 +21,8 @@ func (s *Service) RedirectHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Couldn't get token", http.StatusNotFound)
 		return
 	}
-	err = s.state.SaveClient(n, token, s.auth.NewClient(token))
+	client := s.auth.NewClient(token)
+	err = s.state.SaveClient(n, token, &client)
 	if err == nil {
 		logrus.WithError(err).Error("Unable to save token")
 		http.Error(w, "Couldn't get token", http.StatusNotFound)
