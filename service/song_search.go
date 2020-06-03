@@ -46,6 +46,10 @@ func (s *songSearch) handle(update bot.Update) {
 
 func (s *songSearch) handleCallback(update bot.Update) {
 	songID := strings.TrimPrefix(update.CallbackQuery.Data, searchCallbackPrefix)
+	chat, ok := s.stateSvc.Get(update.CallbackQuery.Message.Chat.ID)
+	if !ok || chat.DjID == 0 {
+		_, _ = s.bot.AnswerCallbackQuery(bot.NewCallback(update.CallbackQuery.ID, res.TxtSearchSongNoDj))
+	}
 	err := s.stateSvc.QueueSong(update.CallbackQuery.From, update.CallbackQuery.Message.Chat, spotify.ID(songID))
 	if err == nil {
 		_, err = s.bot.AnswerCallbackQuery(bot.NewCallback(update.CallbackQuery.ID, res.TxtCallbackAddSongSuccess))
@@ -111,5 +115,5 @@ func songPresentation(song spotify.FullTrack) string {
 		songName = string([]rune(songName)[:app.SongSearchMaxSongLength-3]) + "..."
 	}
 	sec := song.Duration / 1000
-	return fmt.Sprintf("%s - %s   %v:%v", songName, artist, sec/60, sec%60)
+	return fmt.Sprintf("%s - %s   %v:%02d", songName, artist, sec/60, sec%60)
 }

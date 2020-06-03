@@ -18,6 +18,7 @@ const (
 	TxtSearchSongNoSongsFoundError      = "No such song"
 	TxtSearchResultPattern              = "Top %v songs for '%s' found:"
 	TxtSearchSongEmptyQuery             = "Song name not specified"
+	TxtSearchSongNoDj             = "Error: DJ left..."
 )
 
 // WEB TEXT MESSAGES
