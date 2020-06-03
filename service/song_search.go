@@ -45,7 +45,7 @@ func (s *songSearch) handle(update bot.Update) {
 }
 
 func (s *songSearch) handleCallback(update bot.Update) {
-	songID := strings.TrimPrefix(update.CallbackQuery.Data, songLinkPrefix)
+	songID := strings.TrimPrefix(update.CallbackQuery.Data, searchCallbackPrefix)
 	err := s.stateSvc.QueueSong(update.CallbackQuery.From, update.CallbackQuery.Message.Chat, spotify.ID(songID))
 	if err == nil {
 		_, err = s.bot.AnswerCallbackQuery(bot.NewCallback(update.CallbackQuery.ID, res.TxtCallbackAddSongSuccess))
@@ -87,7 +87,7 @@ func (s *songSearch) handleCommand(update bot.Update) {
 	response := bot.NewMessage(update.Message.Chat.ID, fmt.Sprintf(res.TxtSearchResultPattern, len(songs), searchQuery))
 	btns := make([][]bot.InlineKeyboardButton, len(songs))
 	for i, song := range songs {
-		btns[i] = bot.NewInlineKeyboardRow(bot.NewInlineKeyboardButtonData(songPresentation(song), "SPB_SEARCH:"+songID(song)),
+		btns[i] = bot.NewInlineKeyboardRow(bot.NewInlineKeyboardButtonData(songPresentation(song), searchCallbackPrefix+string(song.ID)),
 		)
 	}
 	response.ReplyMarkup = bot.NewInlineKeyboardMarkup(btns...)
@@ -112,8 +112,4 @@ func songPresentation(song spotify.FullTrack) string {
 	}
 	sec := song.Duration / 1000
 	return fmt.Sprintf("%s - %s   %v:%v", songName, artist, sec/60, sec%60)
-}
-func songID(song spotify.FullTrack) string {
-	id:= strings.Split(string(song.ID),":")
-	return id[len(id)-1]
 }
