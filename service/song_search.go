@@ -59,7 +59,7 @@ func (s *songSearch) handleCallback(update bot.Update) {
 		return
 	}
 	if strings.Contains(err.Error(), res.TxtAddSongNoDj) || strings.HasSuffix(err.Error(), "DJ can use /settings command to increase max songs number.") {
-		_, err = s.bot.Send(bot.NewMessage(update.Message.Chat.ID, err.Error()))
+		_, err = s.bot.Send(bot.NewMessage(update.CallbackQuery.Message.Chat.ID, err.Error()))
 		if err != nil {
 			logrus.WithError(err).Error("Unable handle search callback")
 		}
