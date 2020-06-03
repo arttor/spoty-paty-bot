@@ -50,9 +50,6 @@ func main() {
 	updates.Clear()
 	logrus.Info("Listening for updates...")
 	for update := range updates {
-		if update.Message == nil {
-			continue
-		}
 		log.Printf("%+v\n", update)
 		if update.Message != nil {
 			log.Printf("msg: %+v\n", *update.Message)

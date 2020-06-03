@@ -51,7 +51,7 @@ func (s *Service) SearchSongs(fromChat *bot.Chat, searchQuery string) ([]spotify
 		return nil, errors.New(res.TxtSearchSongNoSongsFoundError)
 	}
 	songs := make([]spotify.FullTrack, 0)
-	for i := 0; i < len(result.Tracks.Tracks) || i < app.SongSearchMaxResult; i++ {
+	for i := 0; i < len(result.Tracks.Tracks) && i < app.SongSearchMaxResult; i++ {
 		songs = append(songs, result.Tracks.Tracks[i])
 	}
 	return songs, nil

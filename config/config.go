@@ -12,8 +12,8 @@ const (
 	logLvl              = "info"
 	DefaultMaxSongs     = 3
 	SongSearchMaxResult = 3
-	SongSearchMaxArtistLength = 18
-	SongSearchMaxSongLength = 26
+	SongSearchMaxArtistLength = 17
+	SongSearchMaxSongLength = 25
 )
 
 type Config struct {

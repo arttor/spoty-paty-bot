@@ -111,5 +111,5 @@ func songPresentation(song spotify.FullTrack) string {
 		songName = string([]rune(songName)[:app.SongSearchMaxSongLength-3]) + "..."
 	}
 	sec:= song.Duration/1000
-	return fmt.Sprintf("%s - %s    %v:%v",songName,artist,sec/60,sec%60)
+	return fmt.Sprintf("%s - %s   %v:%v",songName,artist,sec/60,sec%60)
 }
