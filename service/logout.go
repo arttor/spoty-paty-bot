@@ -38,6 +38,6 @@ func (s *logout) handle(update bot.Update) {
 	}
 	_, err = s.bot.Send(msg)
 	if err != nil {
-		logrus.WithError(err).Error("Unable to send already logged in response")
+		logrus.WithError(err).Error("Unable to send logout response")
 	}
 }

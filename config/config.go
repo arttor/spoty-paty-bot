@@ -8,9 +8,12 @@ import (
 )
 
 const (
-	defaultPort     = "8080"
-	logLvl          = "info"
-	DefaultMaxSongs = 3
+	defaultPort         = "8080"
+	logLvl              = "info"
+	DefaultMaxSongs     = 3
+	SongSearchMaxResult = 3
+	SongSearchMaxArtistLength = 18
+	SongSearchMaxSongLength = 26
 )
 
 type Config struct {

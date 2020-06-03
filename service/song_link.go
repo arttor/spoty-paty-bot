@@ -38,8 +38,7 @@ func (s *songLink) handle(update bot.Update) {
 	songURL := update.Message.Text
 	songID := strings.TrimPrefix(songURL, songLinkPrefix)
 	songID = songID[:strings.IndexByte(songID, '?')]
-	logrus.Infof("-------- before %s  ---   after %s", songURL, songID)
-	err := s.stateSvc.QueueSong(update, spotify.ID(songID))
+	err := s.stateSvc.QueueSong(update.Message.From, update.Message.Chat, spotify.ID(songID))
 	var msg bot.MessageConfig
 	if err != nil {
 		msg = bot.NewMessage(update.Message.Chat.ID, err.Error())
@@ -48,6 +47,6 @@ func (s *songLink) handle(update bot.Update) {
 	}
 	_, err = s.bot.Send(msg)
 	if err != nil {
-		logrus.WithError(err).Error("Unable to send already logged in response")
+		logrus.WithError(err).Error("Unable to send song link response")
 	}
 }

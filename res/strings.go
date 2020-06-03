@@ -10,8 +10,14 @@ const (
 	TxtLogoutSuccess                    = "Logout Success. Party has no DJ..."
 	TxtFinishLoginSuccessPattern        = "Welcome! @%s is a DJ"
 	TxtAddSongNoDj                      = "Party has no DJ. Someone should /login"
-	TxtAddSongToMuchSongsInQueuePattern = "Easy @%s! It will be %v song in a row from you. DJ can use /settings command to increase max songs number."
+	TxtAddSongToMuchSongsInQueuePattern = "Easy, @%s! It will be %v song in a row from you. DJ can use /settings command to increase max songs number."
+	TxtAddSongSpotifyError              = "Spotify queue song error"
 	TxtAddSongSuccess                   = "Song added to queue. Nice choice!"
+	TxtCallbackAddSongSuccess           = "Song added!"
+	TxtSearchSongSpotifyError           = "Spotify search song error"
+	TxtSearchSongNoSongsFoundError      = "No such song"
+	TxtSearchResultPattern              = "Top %v songs for '%s' found:"
+	TxtSearchSongEmptyQuery             = "Song name not specified"
 )
 
 // WEB TEXT MESSAGES
@@ -25,4 +31,5 @@ const (
 	CmdLogin       = "login"
 	CmdLoginFinish = "becameDj"
 	CmdLogout      = "logout"
+	CmdSearch      = "search"
 )

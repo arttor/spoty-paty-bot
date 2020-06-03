@@ -18,9 +18,13 @@ func New(stateSvc *state.Service, spotifySvc *spotify.Service, bot *bot.BotAPI) 
 				stateSvc: stateSvc,
 				bot:      bot,
 				next:     &songLink{
-					next:     nil,
 					stateSvc: stateSvc,
 					bot:      bot,
+					next:     &songSearch{
+						stateSvc: stateSvc,
+						bot:      bot,
+						next:     nil,
+					},
 				},
 			},
 		},
