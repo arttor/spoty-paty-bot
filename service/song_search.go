@@ -33,7 +33,7 @@ func (s *songSearch) Handle(update bot.Update) () {
 	logrus.Info("No handler for given update")
 }
 func (s *songSearch) accepts(update bot.Update) bool {
-	return (update.Message.IsCommand() && update.Message.Command() == res.CmdSearch) || (update.CallbackQuery != nil && strings.HasPrefix(update.CallbackQuery.Data, searchCallbackPrefix))
+	return (update.CallbackQuery != nil && strings.HasPrefix(update.CallbackQuery.Data, searchCallbackPrefix)) || (update.Message != nil && update.Message.IsCommand() && update.Message.Command() == res.CmdSearch)
 }
 
 func (s *songSearch) handle(update bot.Update) {
@@ -106,10 +106,10 @@ func songPresentation(song spotify.FullTrack) string {
 	if len([]rune(artist)) > app.SongSearchMaxArtistLength {
 		artist = string([]rune(artist)[:app.SongSearchMaxArtistLength-3]) + "..."
 	}
-	songName:=song.Name
+	songName := song.Name
 	if len([]rune(songName)) > app.SongSearchMaxSongLength {
 		songName = string([]rune(songName)[:app.SongSearchMaxSongLength-3]) + "..."
 	}
-	sec:= song.Duration/1000
-	return fmt.Sprintf("%s - %s   %v:%v",songName,artist,sec/60,sec%60)
+	sec := song.Duration / 1000
+	return fmt.Sprintf("%s - %s   %v:%v", songName, artist, sec/60, sec%60)
 }

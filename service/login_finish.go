@@ -26,7 +26,7 @@ func (s *loginFinish) Handle(update bot.Update) () {
 	logrus.Info("No handler for given update")
 }
 func (s *loginFinish) accepts(update bot.Update) bool {
-	return update.Message.IsCommand() && update.Message.Command() == res.CmdLoginFinish
+	return update.Message!=nil && update.Message.IsCommand() && update.Message.Command() == res.CmdLoginFinish
 }
 
 func (s *loginFinish) handle(update bot.Update) {

@@ -31,7 +31,7 @@ func (s *songLink) Handle(update bot.Update) () {
 	logrus.Info("No handler for given update")
 }
 func (s *songLink) accepts(update bot.Update) bool {
-	return !update.Message.IsCommand() && strings.HasPrefix(update.Message.Text, songLinkPrefix)
+	return update.Message!=nil && !update.Message.IsCommand() && strings.HasPrefix(update.Message.Text, songLinkPrefix)
 }
 
 func (s *songLink) handle(update bot.Update) {
