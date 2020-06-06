@@ -66,9 +66,9 @@ func main() {
 	for {
 		select {
 		case update := <-updates:
-			if update.Message != nil {
-				log.Printf("msg: %+v\n", *update.Message)
-			}
+			//if update.Message != nil {
+			//	log.Printf("msg: %+v\n", *update.Message)
+			//}
 			router.Handle(update)
 		case <-ctx.Done():
 			logrus.Info("Gracefully stopping")
