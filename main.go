@@ -12,6 +12,8 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
+	"os/signal"
 	"time"
 )
 
@@ -48,9 +50,7 @@ func main() {
 	go func() {
 		logrus.Error(http.ListenAndServe("0.0.0.0:"+conf.Port, nil))
 	}()
-	go func() {
-		logrus.Error(inlinesearch.Start(context.Background()))
-	}()
+	startSearchBot()
 	time.Sleep(time.Millisecond * 500)
 	updates.Clear()
 	logrus.Info("Listening for updates...")
@@ -61,4 +61,18 @@ func main() {
 		}
 		router.Handle(update)
 	}
+}
+
+func startSearchBot()  {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	ctx, cancel := context.WithCancel(context.Background())
+	go func() {
+		oscall := <-c
+		log.Printf("system call:%+v", oscall)
+		cancel()
+	}()
+	go func() {
+		logrus.Error(inlinesearch.Start(ctx))
+	}()
 }

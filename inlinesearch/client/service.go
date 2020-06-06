@@ -29,11 +29,11 @@ func NewService(database *sqlx.DB) Service {
 	return &service{db: database}
 }
 
-func (s service) SetClient(client spotify.Client) {
+func (s *service) SetClient(client spotify.Client) {
 	s.client = &client
 }
 
-func (s service) Close() {
+func (s *service) Close() {
 	if s.client == nil || s.db == nil {
 		return
 	}
@@ -73,7 +73,7 @@ func (s service) Close() {
 
 }
 
-func (s service) RestoreClient(getClient GetClient) {
+func (s *service) RestoreClient(getClient GetClient) {
 	searchToken := db.Search{}
 	err := s.db.Get(&searchToken, "SELECT * FROM search WHERE id=$1", true)
 	if err != nil {
@@ -90,7 +90,7 @@ func (s service) RestoreClient(getClient GetClient) {
 	s.client = &res
 }
 
-func (s service) Logout() {
+func (s *service) Logout() {
 	tx, err := s.db.Beginx()
 	if err != nil {
 		logrus.Error(err)
@@ -110,6 +110,6 @@ func (s service) Logout() {
 	s.client = nil
 }
 
-func (s service) GetClient() *spotify.Client {
+func (s *service) GetClient() *spotify.Client {
 	return s.client
 }
