@@ -2,7 +2,7 @@ package command
 
 import (
 	"fmt"
-	"github.com/arttor/spoty-paty-bot/inlinesearch/client"
+	"github.com/arttor/spoty-paty-bot/search"
 	bot "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/sirupsen/logrus"
 	"github.com/zmb3/spotify"
@@ -14,18 +14,18 @@ var (
 	limit = 10
 )
 
-type search struct {
-	stateSvc client.Service
+type inlineSearch struct {
+	searchSvc search.Service
 	bot      *bot.BotAPI
 }
 
-func (s *search) accepts(update bot.Update) bool {
+func (s *inlineSearch) accepts(update bot.Update) bool {
 	return update.InlineQuery != nil
 }
 
-func (s *search) Handle(update bot.Update) () {
+func (s *inlineSearch) Handle(update bot.Update) () {
 	query := update.InlineQuery
-	client := s.stateSvc.GetClient()
+	client := s.searchSvc.GetClient()
 	if client == nil {
 		return
 	}
@@ -47,20 +47,15 @@ func (s *search) Handle(update bot.Update) () {
 	if nextOffsetInt >= res.Tracks.Total {
 		nextOffsetStr = ""
 	}
-	logrus.Errorf("----- offset %v res %v total %v soff %v slim %v", offset, len(res.Tracks.Tracks), res.Tracks.Total, res.Tracks.Offset, res.Tracks.Limit)
 	results := make([]interface{}, len(res.Tracks.Tracks))
 	for i, track := range res.Tracks.Tracks {
 		id := fmt.Sprintf("sppbid:%s:69", track.ID)
-		//r := bot.NewInlineQueryResultAudio(id, track.PreviewURL, songPresentation(track))
-		//r.Duration = 30
-		//r.Caption = track.Name
 		artist := ""
 		for _, a := range track.Artists {
 			artist = artist + a.Name + ", "
 		}
 		artist = strings.TrimSuffix(artist, ", ")
-		//r.Performer = artist
-		r := bot.NewInlineQueryResultArticle(id, songPresentation(track), "")
+		r := bot.NewInlineQueryResultArticle(id, getSongPresentation(track), "")
 		r.Description = artist
 		if len(track.Album.Images) > 0 {
 			r.ThumbURL = track.Album.Images[0].URL
@@ -84,7 +79,7 @@ func (s *search) Handle(update bot.Update) () {
 	}
 }
 
-func songPresentation(song spotify.FullTrack) string {
+func getSongPresentation(song spotify.FullTrack) string {
 	sec := song.Duration / 1000
 	return fmt.Sprintf("[%v:%02d] %s", sec/60, sec%60, song.Name)
 }

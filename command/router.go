@@ -1,10 +1,12 @@
 package command
 
 import (
+	"github.com/arttor/spoty-paty-bot/search"
 	"github.com/arttor/spoty-paty-bot/spotify"
 	"github.com/arttor/spoty-paty-bot/state"
 	bot "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/sirupsen/logrus"
+	"os"
 )
 
 type Handler interface {
@@ -16,7 +18,7 @@ type router struct {
 	handlers []Handler
 }
 
-func New(stateSvc *state.Service, spotifySvc *spotify.Service, bot *bot.BotAPI) Handler {
+func New(stateSvc *state.Service, spotifySvc *spotify.Service, bot *bot.BotAPI,searchSvc search.Service) Handler {
 	return &router{handlers: []Handler{
 		&login{
 			stateSvc:   stateSvc,
@@ -37,7 +39,12 @@ func New(stateSvc *state.Service, spotifySvc *spotify.Service, bot *bot.BotAPI) 
 		&djLeftChat{
 			stateSvc: stateSvc,
 			bot:      bot},
-		&search{
+		&searchLogout{
+			command: os.Getenv("SEARCH_LOGOUT_COMMAND"),
+			searchSvc: searchSvc,
+			bot:      bot},
+		&inlineSearch{
+			searchSvc: searchSvc,
 			bot:      bot},
 	}}
 }

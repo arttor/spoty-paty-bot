@@ -4,7 +4,8 @@ import (
 	"context"
 	"github.com/arttor/spoty-paty-bot/command"
 	"github.com/arttor/spoty-paty-bot/config"
-	"github.com/arttor/spoty-paty-bot/inlinesearch"
+	"github.com/arttor/spoty-paty-bot/db"
+	"github.com/arttor/spoty-paty-bot/search"
 	"github.com/arttor/spoty-paty-bot/spotify"
 	"github.com/arttor/spoty-paty-bot/state"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
@@ -30,8 +31,15 @@ func main() {
 		logrus.WithError(err).Fatal("Unable to register bot with token")
 	}
 	stateSvc := state.New(conf, nil)
-	spotifySvc := spotify.New(conf, stateSvc, bot)
-	router := command.New(stateSvc, spotifySvc, bot)
+	database, err := db.New()
+	if err != nil {
+		logrus.WithError(err).Fatal("Inline search bot Unable to create db")
+	}
+	searchSvc := search.NewService(database)
+	spotifySvc := spotify.New(conf, stateSvc, bot, searchSvc)
+	searchSvc.RestoreClient(spotifySvc.GetClient)
+	logrus.Infof("SearchLoginURL: %v", spotifySvc.GetSearchAuthURL())
+	router := command.New(stateSvc, spotifySvc, bot, searchSvc)
 	logrus.Info("All services started")
 	app.SetupLog(bot)
 	logrus.Infof("Authorized on account %s", bot.Self.UserName)
@@ -51,20 +59,30 @@ func main() {
 	go func() {
 		logrus.Error(http.ListenAndServe("0.0.0.0:"+conf.Port, nil))
 	}()
-	startSearchBot()
+	ctx := listenSignal()
 	time.Sleep(time.Millisecond * 500)
 	updates.Clear()
 	logrus.Info("Listening for updates...")
-	for update := range updates {
-		log.Printf("%+v\n", update)
-		if update.Message != nil {
-			log.Printf("msg: %+v\n", *update.Message)
+	for {
+		select {
+		case update := <-updates:
+			if update.Message != nil {
+				log.Printf("msg: %+v\n", *update.Message)
+			}
+			router.Handle(update)
+		case <-ctx.Done():
+			logrus.Info("Gracefully stopping")
+			searchSvc.Close()
+			err = database.Close()
+			if err != nil {
+				logrus.WithError(err).Error("Inline search bot Unable to close db")
+			}
+			logrus.Info("Gracefully stopped")
 		}
-		router.Handle(update)
 	}
 }
 
-func startSearchBot() {
+func listenSignal() context.Context {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	ctx, cancel := context.WithCancel(context.Background())
@@ -74,7 +92,5 @@ func startSearchBot() {
 		cancel()
 
 	}()
-	go func() {
-		logrus.Error(inlinesearch.Start(ctx))
-	}()
+	return ctx
 }
