@@ -50,7 +50,9 @@ func (s *search) Handle(update bot.Update) () {
 	}
 	results := make([]interface{}, len(res.Tracks.Tracks))
 	for i, track := range res.Tracks.Tracks {
-		results[i] = bot.NewInlineQueryResultAudio(string(track.ID), track.PreviewURL, songPresentation(track))
+		r:=bot.NewInlineQueryResultAudio(string(track.ID), track.PreviewURL, songPresentation(track))
+		r.InputMessageContent = "/search@SpotyPartyBot "+ track.String()
+		results[i] = r
 	}
 	_, err = s.bot.AnswerInlineQuery(bot.InlineConfig{
 		InlineQueryID: query.ID,
