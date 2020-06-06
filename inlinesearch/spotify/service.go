@@ -27,7 +27,7 @@ func New(search client.Service) *Service {
 }
 
 func (s *Service) GetAuthURL() string {
-	return s.auth.AuthURL(s.authState)
+	return s.auth.AuthURLWithDialog(s.authState)
 }
 
 func (s *Service) RedirectHandler(w http.ResponseWriter, r *http.Request) {
