@@ -7,7 +7,7 @@ const (
 	TxtLoginAlreadyPattern              = "This party already have DJ: @%s \nPS /kick and /logout commands may help"
 	TxtLogoutErrNotLogin                = "You need to login first. Use /login command"
 	TxtLogoutErrAnotherUserPattern      = "Cannot logout. You are not DJ like @%s\n PS see /kick command"
-	TxtLogoutSuccess                    = "Logout Success. Party has no DJ..."
+	TxtLogoutSuccessPattern             = "@%s is not a DJ anymore. It is time to /login"
 	TxtFinishLoginSuccessPattern        = "Welcome! @%s is a DJ"
 	TxtAddSongNoDj                      = "Party has no DJ. Someone should /login"
 	TxtAddSongToMuchSongsInQueuePattern = "Easy, @%s! It will be %v song in a row from you. DJ can use /settings command to increase max songs number."
@@ -18,7 +18,7 @@ const (
 	TxtSearchSongNoSongsFoundError      = "No such song"
 	TxtSearchResultPattern              = "Top %v songs for '%s' found:"
 	TxtSearchSongEmptyQuery             = "Song name not specified"
-	TxtSearchSongNoDj             = "Error: DJ left..."
+	TxtSearchSongNoDj                   = "Error: DJ left..."
 )
 
 // WEB TEXT MESSAGES

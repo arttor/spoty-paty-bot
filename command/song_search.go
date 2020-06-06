@@ -1,4 +1,4 @@
-package service
+package command
 
 import (
 	"fmt"
@@ -18,30 +18,17 @@ const (
 type songSearch struct {
 	stateSvc *state.Service
 	bot      *bot.BotAPI
-	next     Handler
 }
 
 func (s *songSearch) Handle(update bot.Update) () {
-	if s.accepts(update) {
-		s.handle(update)
-		return
-	}
-	if s.next != nil {
-		s.next.Handle(update)
-		return
-	}
-	logrus.Info("No handler for given update")
-}
-func (s *songSearch) accepts(update bot.Update) bool {
-	return (update.CallbackQuery != nil && strings.HasPrefix(update.CallbackQuery.Data, searchCallbackPrefix)) || (update.Message != nil && update.Message.IsCommand() && update.Message.Command() == res.CmdSearch)
-}
-
-func (s *songSearch) handle(update bot.Update) {
 	if update.CallbackQuery != nil {
 		s.handleCallback(update)
 	} else {
 		s.handleCommand(update)
 	}
+}
+func (s *songSearch) accepts(update bot.Update) bool {
+	return (update.CallbackQuery != nil && strings.HasPrefix(update.CallbackQuery.Data, searchCallbackPrefix)) || (update.Message != nil && update.Message.IsCommand() && update.Message.Command() == res.CmdSearch)
 }
 
 func (s *songSearch) handleCallback(update bot.Update) {

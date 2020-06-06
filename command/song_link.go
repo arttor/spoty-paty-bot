@@ -1,4 +1,4 @@
-package service
+package command
 
 import (
 	"github.com/arttor/spoty-paty-bot/res"
@@ -14,27 +14,11 @@ const (
 )
 
 type songLink struct {
-	next     Handler
 	stateSvc *state.Service
 	bot      *bot.BotAPI
 }
 
 func (s *songLink) Handle(update bot.Update) () {
-	if s.accepts(update) {
-		s.handle(update)
-		return
-	}
-	if s.next != nil {
-		s.next.Handle(update)
-		return
-	}
-	logrus.Info("No handler for given update")
-}
-func (s *songLink) accepts(update bot.Update) bool {
-	return update.Message!=nil && !update.Message.IsCommand() && strings.HasPrefix(update.Message.Text, songLinkPrefix)
-}
-
-func (s *songLink) handle(update bot.Update) {
 	songURL := update.Message.Text
 	songID := strings.TrimPrefix(songURL, songLinkPrefix)
 	songID = songID[:strings.IndexByte(songID, '?')]
@@ -49,4 +33,7 @@ func (s *songLink) handle(update bot.Update) {
 	if err != nil {
 		logrus.WithError(err).Error("Unable to send song link response")
 	}
+}
+func (s *songLink) accepts(update bot.Update) bool {
+	return update.Message!=nil && !update.Message.IsCommand() && strings.HasPrefix(update.Message.Text, songLinkPrefix)
 }

@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/arttor/spoty-paty-bot/config"
-	"github.com/arttor/spoty-paty-bot/service"
+	"github.com/arttor/spoty-paty-bot/command"
 	"github.com/arttor/spoty-paty-bot/spotify"
 	"github.com/arttor/spoty-paty-bot/state"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
@@ -26,7 +26,7 @@ func main() {
 	}
 	stateSvc := state.New(conf, nil)
 	spotifySvc := spotify.New(conf, stateSvc, bot)
-	router := service.New(stateSvc, spotifySvc, bot)
+	router := command.New(stateSvc, spotifySvc, bot)
 	logrus.Info("All services started")
 	app.SetupLog(bot)
 	logrus.Infof("Authorized on account %s", bot.Self.UserName)

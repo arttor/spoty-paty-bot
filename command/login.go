@@ -1,4 +1,4 @@
-package service
+package command
 
 import (
 	"fmt"
@@ -11,34 +11,21 @@ import (
 )
 
 type login struct {
-	next       Handler
 	stateSvc   *state.Service
 	spotifySvc *spotify.Service
 	bot        *bot.BotAPI
 }
 
 func (s *login) Handle(update tgbotapi.Update) () {
-	if s.accepts(update) {
-		s.handleCommand(update)
-		return
-	}
-	if s.next != nil {
-		s.next.Handle(update)
-		return
-	}
-	logrus.Info("No handler for given update")
-}
-func (s *login) accepts(update tgbotapi.Update) bool {
-	return update.Message!=nil && update.Message.IsCommand() && update.Message.Command() == res.CmdLogin
-}
-
-func (s *login) handleCommand(update tgbotapi.Update) {
 	chat, _ := s.stateSvc.Get(update.Message.Chat.ID)
 	if chat.DjID == 0 {
 		s.login(update)
 	} else {
 		s.alreadyLoggedIn(update, chat)
 	}
+}
+func (s *login) accepts(update tgbotapi.Update) bool {
+	return update.Message!=nil && update.Message.IsCommand() && update.Message.Command() == res.CmdLogin
 }
 
 func (s *login) login(update tgbotapi.Update) {

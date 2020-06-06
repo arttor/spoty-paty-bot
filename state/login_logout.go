@@ -61,21 +61,22 @@ func (s *Service) Get(chatID int64) (Chat, bool) {
 	return chat, ok
 }
 
-func (s *Service) Logout(update bot.Update) error {
+func (s *Service) Logout(fromChat *bot.Chat, userLeft *bot.User) error {
 	s.m.Lock()
 	defer s.m.Unlock()
-	chatID := update.Message.Chat.ID
+	chatID := fromChat.ID
 	chat, ok := s.mem[chatID]
 	if !ok || chat.DjID == 0 {
 		return errors.New(res.TxtLogoutErrNotLogin)
 	}
-	if chat.DjID != update.Message.From.ID {
+	if chat.DjID != userLeft.ID {
 		return errors.New(fmt.Sprintf(res.TxtLogoutErrAnotherUserPattern, chat.DjName))
 	}
 	chat.DjClient = nil
 	chat.LoginCandidates = nil
 	chat.DjID = 0
 	chat.DjName = ""
+	chat.Queue = nil
 	s.mem[chatID] = chat
 	return nil
 }

@@ -1,4 +1,4 @@
-package service
+package command
 
 import (
 	"fmt"
@@ -11,25 +11,9 @@ import (
 type loginFinish struct {
 	stateSvc *state.Service
 	bot      *bot.BotAPI
-	next     Handler
 }
 
 func (s *loginFinish) Handle(update bot.Update) () {
-	if s.accepts(update) {
-		s.handle(update)
-		return
-	}
-	if s.next != nil {
-		s.next.Handle(update)
-		return
-	}
-	logrus.Info("No handler for given update")
-}
-func (s *loginFinish) accepts(update bot.Update) bool {
-	return update.Message!=nil && update.Message.IsCommand() && update.Message.Command() == res.CmdLoginFinish
-}
-
-func (s *loginFinish) handle(update bot.Update) {
 	loginCode := update.Message.CommandArguments()
 	err := s.stateSvc.FinishLogin(update, loginCode)
 	var msg bot.MessageConfig
@@ -42,4 +26,7 @@ func (s *loginFinish) handle(update bot.Update) {
 	if err != nil {
 		logrus.WithError(err).Error("Unable to send finish login response")
 	}
+}
+func (s *loginFinish) accepts(update bot.Update) bool {
+	return update.Message!=nil && update.Message.IsCommand() && update.Message.Command() == res.CmdLoginFinish
 }
