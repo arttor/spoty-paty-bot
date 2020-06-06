@@ -68,7 +68,7 @@ func (s *search) Handle(update bot.Update) () {
 			r.ThumbWidth = track.Album.Images[0].Width
 		}
 		r.InputMessageContent = bot.InputTextMessageContent{
-			Text: "/search " + track.Name + "@SpotyPartyBot",
+			Text: "/search " + track.Name + " @SpotyPartyBot",
 		}
 		results[i] = r
 	}
