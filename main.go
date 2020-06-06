@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"syscall"
 	"time"
 )
 
@@ -65,7 +66,7 @@ func main() {
 
 func startSearchBot()  {
 	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt)
+	signal.Notify(c, os.Interrupt,syscall.SIGTERM)
 	ctx, cancel := context.WithTimeout(context.Background(),time.Second*5)
 	go func() {
 		oscall := <-c
