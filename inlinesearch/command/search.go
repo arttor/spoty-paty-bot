@@ -51,17 +51,24 @@ func (s *search) Handle(update bot.Update) () {
 	results := make([]interface{}, len(res.Tracks.Tracks))
 	for i, track := range res.Tracks.Tracks {
 		id := fmt.Sprintf("sppbid:%s:69", track.ID)
-		r := bot.NewInlineQueryResultAudio(id, track.PreviewURL, songPresentation(track))
-		r.Duration = 30
-		r.Caption = track.Name
+		//r := bot.NewInlineQueryResultAudio(id, track.PreviewURL, songPresentation(track))
+		//r.Duration = 30
+		//r.Caption = track.Name
 		artist := ""
 		for _, a := range track.Artists {
 			artist = artist + a.Name + ", "
 		}
 		artist = strings.TrimSuffix(artist, ", ")
-		r.Performer = artist
+		//r.Performer = artist
+		r := bot.NewInlineQueryResultArticle(id, songPresentation(track), "")
+		r.Description = artist
+		if len(track.Album.Images) > 0 {
+			r.ThumbURL = track.Album.Images[0].URL
+			r.ThumbHeight = track.Album.Images[0].Height
+			r.ThumbWidth = track.Album.Images[0].Width
+		}
 		r.InputMessageContent = bot.InputTextMessageContent{
-			Text: "/search@SpotyPartyBot " + track.String(),
+			Text: "/search " + track.Name,
 		}
 		results[i] = r
 	}
