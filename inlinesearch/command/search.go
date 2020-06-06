@@ -68,7 +68,7 @@ func (s *search) Handle(update bot.Update) () {
 			r.ThumbWidth = track.Album.Images[0].Width
 		}
 		r.InputMessageContent = bot.InputTextMessageContent{
-			Text: "/search " + track.Name,
+			Text: "/search " + track.Name + "@SpotyPartyBot",
 		}
 		results[i] = r
 	}
@@ -86,5 +86,5 @@ func (s *search) Handle(update bot.Update) () {
 
 func songPresentation(song spotify.FullTrack) string {
 	sec := song.Duration / 1000
-	return fmt.Sprintf("%s   %v:%02d", song.Name, sec/60, sec%60)
+	return fmt.Sprintf("[%v:%02d] %s", sec/60, sec%60, song.Name)
 }
