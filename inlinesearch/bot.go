@@ -56,11 +56,13 @@ func Start(ctx context.Context) error {
 		case update := <-updates:
 			handler.Handle(update)
 		case <-ctx.Done():
+			logrus.Warn("EXIT FROM INLINE BOT")
 			svc.Close()
 			err = database.Close()
 			if err != nil {
 				logrus.WithError(err).Error("Inline search bot Unable to close db")
 			}
+			logrus.Warn("EXIT FROM INLINE BOT SUCCESS")
 			return nil
 		}
 	}
