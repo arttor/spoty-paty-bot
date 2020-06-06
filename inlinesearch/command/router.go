@@ -25,6 +25,9 @@ func New(stateSvc client.Service, spotifySvc *spotify.Service, bot *bot.BotAPI) 
 		&logout{
 			stateSvc: stateSvc,
 			bot:      bot},
+		&search{
+			stateSvc: stateSvc,
+			bot:      bot},
 	}}
 }
 
