@@ -50,10 +50,11 @@ func (s *search) Handle(update bot.Update) () {
 	}
 	results := make([]interface{}, len(res.Tracks.Tracks))
 	for i, track := range res.Tracks.Tracks {
-		r:=bot.NewInlineQueryResultAudio(string(track.ID), track.PreviewURL, songPresentation(track))
+		id:=fmt.Sprintf("%s", track.ID)
+		logrus.Errorf("-------------%s    ==  %v",id, len(id))
+		r := bot.NewInlineQueryResultAudio(id, track.PreviewURL, songPresentation(track))
 		r.InputMessageContent = bot.InputTextMessageContent{
-			Text:                  "/search@SpotyPartyBot "+ track.String(),
-			DisableWebPagePreview: true,
+			Text: "/search@SpotyPartyBot " + track.String(),
 		}
 		results[i] = r
 	}
