@@ -1,14 +1,14 @@
 package command
 
 import (
-	"github.com/arttor/spoty-paty-bot/inlinesearch"
+	"github.com/arttor/spoty-paty-bot/inlinesearch/client"
 	"github.com/arttor/spoty-paty-bot/res"
 	bot "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/sirupsen/logrus"
 )
 
 type logout struct {
-	stateSvc inlinesearch.Service
+	stateSvc client.Service
 	bot      *bot.BotAPI
 }
 

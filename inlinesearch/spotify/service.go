@@ -2,7 +2,7 @@ package spotify
 
 import (
 	"fmt"
-	"github.com/arttor/spoty-paty-bot/inlinesearch"
+	"github.com/arttor/spoty-paty-bot/inlinesearch/client"
 	"github.com/sirupsen/logrus"
 	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2"
@@ -17,10 +17,10 @@ const (
 type Service struct {
 	auth      *spotify.Authenticator
 	authState string
-	search    inlinesearch.Service
+	search    client.Service
 }
 
-func New(search inlinesearch.Service) *Service {
+func New(search client.Service) *Service {
 	auth := spotify.NewAuthenticator(os.Getenv("TG_BOT_URL") + Callback)
 	auth.SetAuthInfo(os.Getenv("SPOTIFY_CLIENT_ID"), os.Getenv("SPOTIFY_CLIENT_SECRET"))
 	return &Service{auth: &auth, authState: os.Getenv("SEARCH_STATE"), search: search}

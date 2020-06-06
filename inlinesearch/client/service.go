@@ -1,4 +1,4 @@
-package inlinesearch
+package client
 
 import (
 	"encoding/json"

@@ -1,7 +1,7 @@
 package command
 
 import (
-	"github.com/arttor/spoty-paty-bot/inlinesearch"
+	"github.com/arttor/spoty-paty-bot/inlinesearch/client"
 	"github.com/arttor/spoty-paty-bot/inlinesearch/spotify"
 	"github.com/arttor/spoty-paty-bot/res"
 	bot "github.com/go-telegram-bot-api/telegram-bot-api"
@@ -10,7 +10,7 @@ import (
 )
 
 type login struct {
-	stateSvc   inlinesearch.Service
+	stateSvc   client.Service
 	spotifySvc *spotify.Service
 	bot        *bot.BotAPI
 }

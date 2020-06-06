@@ -1,7 +1,7 @@
 package command
 
 import (
-	"github.com/arttor/spoty-paty-bot/inlinesearch"
+	"github.com/arttor/spoty-paty-bot/inlinesearch/client"
 	"github.com/arttor/spoty-paty-bot/inlinesearch/spotify"
 	bot "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/sirupsen/logrus"
@@ -16,7 +16,7 @@ type router struct {
 	handlers []Handler
 }
 
-func New(stateSvc inlinesearch.Service, spotifySvc *spotify.Service, bot *bot.BotAPI) Handler {
+func New(stateSvc client.Service, spotifySvc *spotify.Service, bot *bot.BotAPI) Handler {
 	return &router{handlers: []Handler{
 		&login{
 			stateSvc:   stateSvc,

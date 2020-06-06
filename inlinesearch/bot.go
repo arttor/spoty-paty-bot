@@ -3,6 +3,7 @@ package inlinesearch
 import (
 	"context"
 	"github.com/arttor/spoty-paty-bot/db"
+	"github.com/arttor/spoty-paty-bot/inlinesearch/client"
 	"github.com/arttor/spoty-paty-bot/inlinesearch/command"
 	"github.com/arttor/spoty-paty-bot/inlinesearch/spotify"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
@@ -41,7 +42,7 @@ func Start(ctx context.Context) error {
 		logrus.WithError(err).Error("Inline search bot Unable to create db")
 		return err
 	}
-	svc := NewService(database)
+	svc := client.NewService(database)
 	spotifySvc := spotify.New(svc)
 	svc.RestoreClient(spotifySvc.GetClient)
 	http.HandleFunc(spotify.Callback, spotifySvc.RedirectHandler)
