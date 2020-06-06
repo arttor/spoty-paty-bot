@@ -66,11 +66,12 @@ func main() {
 func startSearchBot()  {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithTimeout(context.Background(),time.Second*5)
 	go func() {
 		oscall := <-c
 		log.Printf("system call:%+v", oscall)
 		cancel()
+
 	}()
 	go func() {
 		logrus.Error(inlinesearch.Start(ctx))
