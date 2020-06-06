@@ -2,7 +2,6 @@ package command
 
 import (
 	"fmt"
-	app "github.com/arttor/spoty-paty-bot/config"
 	"github.com/arttor/spoty-paty-bot/inlinesearch/client"
 	bot "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/sirupsen/logrus"
@@ -48,9 +47,10 @@ func (s *search) Handle(update bot.Update) () {
 	if nextOffsetInt >= res.Tracks.Total {
 		nextOffsetStr = ""
 	}
+	logrus.Errorf("----- offset %v res %v total %v soff %v slim %v", offset, len(res.Tracks.Tracks), res.Tracks.Total, res.Tracks.Offset, res.Tracks.Limit)
 	results := make([]interface{}, len(res.Tracks.Tracks))
 	for i, track := range res.Tracks.Tracks {
-		id:=fmt.Sprintf("sppbid:%s:69", track.ID)
+		id := fmt.Sprintf("sppbid:%s:69", track.ID)
 		r := bot.NewInlineQueryResultAudio(id, track.PreviewURL, songPresentation(track))
 		r.Duration = 30
 		r.Caption = track.Name
@@ -78,18 +78,6 @@ func (s *search) Handle(update bot.Update) () {
 }
 
 func songPresentation(song spotify.FullTrack) string {
-	artist := ""
-	for _, a := range song.Artists {
-		artist = artist + a.Name + ", "
-	}
-	artist = strings.TrimSuffix(artist, ", ")
-	if len([]rune(artist)) > app.SongSearchMaxArtistLength {
-		artist = string([]rune(artist)[:app.SongSearchMaxArtistLength-3]) + "..."
-	}
-	songName := song.Name
-	if len([]rune(songName)) > app.SongSearchMaxSongLength {
-		songName = string([]rune(songName)[:app.SongSearchMaxSongLength-3]) + "..."
-	}
 	sec := song.Duration / 1000
-	return fmt.Sprintf("%s - %s   %v:%02d", songName, artist, sec/60, sec%60)
+	return fmt.Sprintf("%s   %v:%02d", song.Name, sec/60, sec%60)
 }
