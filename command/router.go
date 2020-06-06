@@ -37,6 +37,8 @@ func New(stateSvc *state.Service, spotifySvc *spotify.Service, bot *bot.BotAPI) 
 		&djLeftChat{
 			stateSvc: stateSvc,
 			bot:      bot},
+		&search{
+			bot:      bot},
 	}}
 }
 
