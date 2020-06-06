@@ -29,7 +29,7 @@ func (s *Service) QueueSong(fromUser *bot.User, fromChat *bot.Chat, songID spoti
 	err := chat.DjClient.QueueSong(songID)
 	if err != nil {
 		logrus.WithError(err).Error("Spotify queue song error")
-		return errors.New(res.TxtAddSongSpotifyError)
+		return err
 	}
 	s.mem[chatID]=chat
 	return nil

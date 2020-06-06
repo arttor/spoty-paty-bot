@@ -1,8 +1,10 @@
 package main
 
 import (
-	"github.com/arttor/spoty-paty-bot/config"
+	"context"
 	"github.com/arttor/spoty-paty-bot/command"
+	"github.com/arttor/spoty-paty-bot/config"
+	"github.com/arttor/spoty-paty-bot/inlinesearch"
 	"github.com/arttor/spoty-paty-bot/spotify"
 	"github.com/arttor/spoty-paty-bot/state"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
@@ -45,6 +47,9 @@ func main() {
 	http.HandleFunc(spotify.Callback, spotifySvc.RedirectHandler)
 	go func() {
 		logrus.Error(http.ListenAndServe("0.0.0.0:"+conf.Port, nil))
+	}()
+	go func() {
+		logrus.Error(inlinesearch.Start(context.Background()))
 	}()
 	time.Sleep(time.Millisecond * 500)
 	updates.Clear()
