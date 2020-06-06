@@ -30,17 +30,8 @@ func (s *search) Handle(update bot.Update) () {
 	if client == nil {
 		return
 	}
-	if len([]rune(query.Query)) < 3 {
-		_, err := s.bot.AnswerInlineQuery(bot.InlineConfig{
-			InlineQueryID: query.ID,
-			Results:       nil,
-			CacheTime:     600,
-			IsPersonal:    false,
-			NextOffset:    "",
-		})
-		if err != nil {
-			logrus.WithError(err).Error("Unable to send logout response")
-		}
+	if len([]rune(query.Query)) < 4 {
+		return
 	}
 	offset, _ := strconv.Atoi(query.Offset)
 	res, err := client.SearchOpt(query.Query, spotify.SearchTypeTrack, &spotify.Options{Offset: &offset, Limit: &limit})
@@ -57,14 +48,13 @@ func (s *search) Handle(update bot.Update) () {
 	if nextOffsetInt >= res.Tracks.Total {
 		nextOffsetStr = ""
 	}
-	results := make([]bot.InlineQueryResultAudio, len(res.Tracks.Tracks))
+	results := make([]interface{}, len(res.Tracks.Tracks))
 	for i, track := range res.Tracks.Tracks {
 		results[i] = bot.NewInlineQueryResultAudio(string(track.ID), track.PreviewURL, songPresentation(track))
 	}
-
 	_, err = s.bot.AnswerInlineQuery(bot.InlineConfig{
 		InlineQueryID: query.ID,
-		Results:       []interface{}{results},
+		Results:       results,
 		CacheTime:     600,
 		IsPersonal:    false,
 		NextOffset:    nextOffsetStr,
