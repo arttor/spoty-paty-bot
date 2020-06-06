@@ -30,7 +30,7 @@ func New(stateSvc *state.Service, spotifySvc *spotify.Service, bot *bot.BotAPI,s
 		&loginFinish{
 			stateSvc: stateSvc,
 			bot:      bot},
-		&songLink{
+		&addSong{
 			stateSvc: stateSvc,
 			bot:      bot},
 		&songSearch{
