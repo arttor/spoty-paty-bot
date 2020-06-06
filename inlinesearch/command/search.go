@@ -50,9 +50,16 @@ func (s *search) Handle(update bot.Update) () {
 	}
 	results := make([]interface{}, len(res.Tracks.Tracks))
 	for i, track := range res.Tracks.Tracks {
-		id:=fmt.Sprintf("%s", track.ID)
-		logrus.Errorf("-------------%s    ==  %v",id, len(id))
+		id:=fmt.Sprintf("sppbid:%s:69", track.ID)
 		r := bot.NewInlineQueryResultAudio(id, track.PreviewURL, songPresentation(track))
+		r.Duration = 30
+		r.Caption = track.Name
+		artist := ""
+		for _, a := range track.Artists {
+			artist = artist + a.Name + ", "
+		}
+		artist = strings.TrimSuffix(artist, ", ")
+		r.Performer = artist
 		r.InputMessageContent = bot.InputTextMessageContent{
 			Text: "/search@SpotyPartyBot " + track.String(),
 		}
