@@ -31,6 +31,6 @@ func (s *addSong) Handle(update bot.Update) () {
 	}
 	_, err = s.bot.Send(msg)
 	if err != nil {
-		logrus.WithError(err).Error("Unable to send logout response")
+		logrus.WithError(err).Error("Unable to send add song response")
 	}
 }

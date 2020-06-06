@@ -38,7 +38,7 @@ func main() {
 	searchSvc := search.NewService(database)
 	spotifySvc := spotify.New(conf, stateSvc, bot, searchSvc)
 	searchSvc.RestoreClient(spotifySvc.GetClient)
-	logrus.Infof("SearchLoginURL: %v", spotifySvc.GetSearchAuthURL())
+	logrus.Infof("SearchLoginURL: %s", spotifySvc.GetSearchAuthURL())
 	router := command.New(stateSvc, spotifySvc, bot, searchSvc)
 	logrus.Info("All services started")
 	app.SetupLog(bot)
@@ -87,10 +87,8 @@ func listenSignal() context.Context {
 	signal.Notify(c, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	ctx, cancel := context.WithCancel(context.Background())
 	go func() {
-		oscall := <-c
-		log.Printf("system call:%+v", oscall)
+		<-c
 		cancel()
-
 	}()
 	return ctx
 }

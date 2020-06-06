@@ -84,7 +84,7 @@ func (s *songSearch) handleCommand(update bot.Update) {
 	response.ReplyMarkup = bot.NewInlineKeyboardMarkup(btns...)
 	_, err = s.bot.Send(response)
 	if err != nil {
-		logrus.WithError(err).Error("Unable to send log in request")
+		logrus.WithError(err).Error("Unable to send search response")
 	}
 }
 

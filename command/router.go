@@ -59,6 +59,6 @@ func (r *router) Handle(update bot.Update) {
 	logrus.Info("No handler for given update")
 }
 
-func (r *router) accepts(update bot.Update) bool {
+func (r *router) accepts(bot.Update) bool {
 	return true
 }

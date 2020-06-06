@@ -18,6 +18,7 @@ const (
 	TxtSearchResultPattern              = "Top %v songs for '%s' found:"
 	TxtSearchSongEmptyQuery             = "Song name not specified"
 	TxtSearchSongNoDj                   = "Error: DJ left..."
+	TxtNoActiveDeviceError              = "No Acitve device found. Dj press 'play' in Spotify app."
 )
 
 // WEB TEXT MESSAGES
@@ -32,5 +33,5 @@ const (
 	CmdLoginFinish = "becameDj"
 	CmdLogout      = "logout"
 	CmdSearch      = "search"
-	CmdAddSong      = "addSong"
+	CmdAddSong     = "addSong"
 )

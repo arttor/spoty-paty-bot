@@ -16,7 +16,7 @@ func (s *searchLogout) Handle(update bot.Update) () {
 	s.searchSvc.Logout()
 	_, err := s.bot.Send( bot.NewMessage(update.Message.Chat.ID, "Logout success."))
 	if err != nil {
-		logrus.WithError(err).Error("Unable to send logout response")
+		logrus.WithError(err).Error("Unable to send search logout response")
 	}
 }
 func (s *searchLogout) accepts(update bot.Update) bool {

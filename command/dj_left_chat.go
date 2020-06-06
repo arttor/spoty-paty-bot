@@ -23,7 +23,7 @@ func (s *djLeftChat) Handle(update bot.Update) () {
 	if err == nil {
 		_, err = s.bot.Send(bot.NewMessage(update.Message.Chat.ID, fmt.Sprintf(res.TxtLogoutSuccessPattern, update.Message.LeftChatMember.String())))
 		if err != nil {
-			logrus.WithError(err).Error("Unable to send logout response")
+			logrus.WithError(err).Error("Unable to send dj left response")
 		}
 	}
 }

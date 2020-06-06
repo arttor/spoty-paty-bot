@@ -76,7 +76,7 @@ func (s *inlineSearch) Handle(update bot.Update) () {
 		NextOffset:    nextOffsetStr,
 	})
 	if err != nil {
-		logrus.WithError(err).Error("Unable to send logout response")
+		logrus.WithError(err).Error("Unable to send search inline response")
 	}
 }
 
