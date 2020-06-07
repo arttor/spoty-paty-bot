@@ -8,6 +8,7 @@ require (
 	github.com/lib/pq v1.6.0
 	github.com/sirupsen/logrus v1.6.0
 	github.com/technoweenie/multipartstreamer v1.0.1 // indirect
-	github.com/zmb3/spotify v0.0.0-20200525010707-bc712583571e // indirect
+	github.com/zmb3/spotify v0.0.0-20200525010707-bc712583571e
+	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	google.golang.org/appengine v1.6.6 // indirect
 )
