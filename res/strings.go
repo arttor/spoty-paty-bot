@@ -9,7 +9,7 @@ const (
 	TxtLogoutErrAnotherUserPattern      = "Cannot logout. You are not DJ like @%s\n PS see /kick command"
 	TxtLogoutSuccessPattern             = "@%s is not a DJ anymore. It is time to /login"
 	TxtFinishLoginSuccessPattern        = "Welcome! @%s is a DJ"
-	TxtAddSongNoDj                      = "Party has no DJ. Someone should /login"
+	TxtNoDjError                        = "Party has no DJ. Someone should /login"
 	TxtAddSongToMuchSongsInQueuePattern = "Easy, @%s! It will be %v song in a row from you. DJ can use /settings command to increase max songs number."
 	TxtAddSongSuccess                   = "Song added to queue. Nice choice!"
 	TxtCallbackAddSongSuccess           = "Song added!"
@@ -18,7 +18,11 @@ const (
 	TxtSearchResultPattern              = "Top %v songs for '%s' found:"
 	TxtSearchSongEmptyQuery             = "Song name not specified"
 	TxtSearchSongNoDj                   = "Error: DJ left..."
-	TxtNoActiveDeviceError              = "No Acitve device found. Dj press 'play' in Spotify app."
+	TxtNoActiveDeviceError              = "DJ Spotify device is inactive. Press 'play' in DJ Spotify app and try again."
+	TxtNoSongError                      = "There is nothing to skip. Search some song with '@SpotyPartyBot song name' and add it first."
+	TxtVoteSkipAlreadyVotedPattern      = "@%s already voted. (%v/%v) to skip %s"
+	TxtVoteSkipVotedPattern             = "(%v/%v) to skip %s"
+	TxtVoteSkipSuccessPattern           = "(%v/%v) Got it! Let's play something different from %s"
 )
 
 // WEB TEXT MESSAGES
@@ -34,4 +38,6 @@ const (
 	CmdLogout      = "logout"
 	CmdSearch      = "search"
 	CmdAddSong     = "addSong"
+	CmdQueue       = "queue"
+	CmdVoteSkip    = "skip"
 )

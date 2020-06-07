@@ -18,11 +18,15 @@ func (s *addSong) accepts(update bot.Update) bool {
 }
 
 func (s *addSong) Handle(update bot.Update) () {
+	_, _ = s.bot.DeleteMessage(bot.DeleteMessageConfig{
+		ChatID:    update.Message.Chat.ID,
+		MessageID: update.Message.MessageID,
+	})
 	songID := update.Message.CommandArguments()
 	if songID == "" {
 		return
 	}
-	err := s.stateSvc.QueueSong(update.Message.From, update.Message.Chat, spotify.ID(songID))
+	err := s.stateSvc.AddSong(update.Message.From, update.Message.Chat, spotify.ID(songID))
 	var msg bot.MessageConfig
 	if err != nil {
 		msg = bot.NewMessage(update.Message.Chat.ID, err.Error())

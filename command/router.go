@@ -46,6 +46,9 @@ func New(stateSvc *state.Service, spotifySvc *spotify.Service, bot *bot.BotAPI,s
 		&inlineSearch{
 			searchSvc: searchSvc,
 			bot:      bot},
+		&voteSkip{
+			stateSvc: stateSvc,
+			bot:      bot},
 	}}
 }
 

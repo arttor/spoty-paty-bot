@@ -13,7 +13,15 @@ type loginFinish struct {
 	bot      *bot.BotAPI
 }
 
+func (s *loginFinish) accepts(update bot.Update) bool {
+	return update.Message!=nil && update.Message.IsCommand() && update.Message.Command() == res.CmdLoginFinish
+}
+
 func (s *loginFinish) Handle(update bot.Update) () {
+	_, _ = s.bot.DeleteMessage(bot.DeleteMessageConfig{
+	ChatID:    update.Message.Chat.ID,
+	MessageID: update.Message.MessageID,
+})
 	loginCode := update.Message.CommandArguments()
 	err := s.stateSvc.FinishLogin(update, loginCode)
 	var msg bot.MessageConfig
@@ -26,7 +34,4 @@ func (s *loginFinish) Handle(update bot.Update) () {
 	if err != nil {
 		logrus.WithError(err).Error("Unable to send finish login response")
 	}
-}
-func (s *loginFinish) accepts(update bot.Update) bool {
-	return update.Message!=nil && update.Message.IsCommand() && update.Message.Command() == res.CmdLoginFinish
 }

@@ -37,7 +37,7 @@ func (s *songSearch) handleCallback(update bot.Update) {
 	if !ok || chat.DjID == 0 {
 		_, _ = s.bot.AnswerCallbackQuery(bot.NewCallback(update.CallbackQuery.ID, res.TxtSearchSongNoDj))
 	}
-	err := s.stateSvc.QueueSong(update.CallbackQuery.From, update.CallbackQuery.Message.Chat, spotify.ID(songID))
+	err := s.stateSvc.AddSong(update.CallbackQuery.From, update.CallbackQuery.Message.Chat, spotify.ID(songID))
 	if err == nil {
 		_, err = s.bot.AnswerCallbackQuery(bot.NewCallback(update.CallbackQuery.ID, res.TxtCallbackAddSongSuccess))
 		if err != nil {
@@ -45,7 +45,7 @@ func (s *songSearch) handleCallback(update bot.Update) {
 		}
 		return
 	}
-	if strings.Contains(err.Error(), res.TxtAddSongNoDj) || strings.HasSuffix(err.Error(), "DJ can use /settings command to increase max songs number.") {
+	if strings.Contains(err.Error(), res.TxtNoDjError) || strings.HasSuffix(err.Error(), "DJ can use /settings command to increase max songs number.") {
 		_, err = s.bot.Send(bot.NewMessage(update.CallbackQuery.Message.Chat.ID, err.Error()))
 		if err != nil {
 			logrus.WithError(err).Error("Unable handle search callback")
