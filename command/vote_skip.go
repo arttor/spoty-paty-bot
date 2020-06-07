@@ -17,10 +17,13 @@ func (s *voteSkip) accepts(update bot.Update) bool {
 }
 
 func (s *voteSkip) Handle(update bot.Update) () {
-	_, _ = s.bot.DeleteMessage(bot.DeleteMessageConfig{
+	_, err := s.bot.DeleteMessage(bot.DeleteMessageConfig{
 		ChatID:    update.Message.Chat.ID,
 		MessageID: update.Message.MessageID,
 	})
+	if err != nil {
+		logrus.WithError(err).Error("Unable to delete message")
+	}
 	num, err := s.bot.GetChatMembersCount(update.Message.Chat.ChatConfig())
 	if err != nil {
 		logrus.WithError(err).Error("Unable to get num of chat members")

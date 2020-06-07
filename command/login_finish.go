@@ -14,16 +14,19 @@ type loginFinish struct {
 }
 
 func (s *loginFinish) accepts(update bot.Update) bool {
-	return update.Message!=nil && update.Message.IsCommand() && update.Message.Command() == res.CmdLoginFinish
+	return update.Message != nil && update.Message.IsCommand() && update.Message.Command() == res.CmdLoginFinish
 }
 
 func (s *loginFinish) Handle(update bot.Update) () {
-	_, _ = s.bot.DeleteMessage(bot.DeleteMessageConfig{
-	ChatID:    update.Message.Chat.ID,
-	MessageID: update.Message.MessageID,
-})
+	_, err := s.bot.DeleteMessage(bot.DeleteMessageConfig{
+		ChatID:    update.Message.Chat.ID,
+		MessageID: update.Message.MessageID,
+	})
+	if err != nil {
+		logrus.WithError(err).Error("Unable to delete message")
+	}
 	loginCode := update.Message.CommandArguments()
-	err := s.stateSvc.FinishLogin(update, loginCode)
+	err = s.stateSvc.FinishLogin(update, loginCode)
 	var msg bot.MessageConfig
 	if err != nil {
 		msg = bot.NewMessage(update.Message.Chat.ID, err.Error())
