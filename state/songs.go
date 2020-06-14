@@ -95,7 +95,7 @@ func (s *Service) SkipSong(fromUser *bot.User, fromChat *bot.Chat, numOfChatMemb
 		chat.VoteSkip.Votes = make(map[int]struct{})
 	}
 	_, isVoted := chat.VoteSkip.Votes[fromUser.ID]
-	votesNeeded := (numOfChatMembers / 2) + 1
+	votesNeeded := numOfChatMembers / 2
 	if isVoted {
 		s.mem[fromChat.ID] = chat
 		return "", errors.New(fmt.Sprintf(res.TxtVoteSkipAlreadyVotedPattern, fromUser.String(), len(chat.VoteSkip.Votes), votesNeeded, currSong.Name))
