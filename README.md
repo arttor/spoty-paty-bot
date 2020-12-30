@@ -1,5 +1,12 @@
 # @SpotyPartyBot for Telegram
+*- Dude, you should listen this one. Wait, wait, wait there will be a guitar solo*
 
+Tired of your friend who puts his fav songs for hours at the party?
+
+Everybody fighting for AUX cable to play the next song in a car?
+
+Just add this bot to a chat and anyone can queue songs on a single device.
+The best part? Nobody can add more than 3 songs in a row and there is a vote for skipping the song!
 ## How to use
 1. Add `@SpotyPartyBot` to a group chat
 2. Someone from the chat should log into Spotify account with `/login` command. 
