@@ -21,16 +21,13 @@ type inlineSearch struct {
 }
 
 func (s *inlineSearch) accepts(update bot.Update) bool {
-	return update.InlineQuery != nil
+	return update.InlineQuery != nil && (len([]rune(update.InlineQuery.Query)) > 3 )
 }
 
 func (s *inlineSearch) Handle(update bot.Update) () {
 	query := update.InlineQuery
 	client := s.searchSvc.GetClient()
 	if client == nil {
-		return
-	}
-	if len([]rune(query.Query)) < 4 {
 		return
 	}
 	offset, _ := strconv.Atoi(query.Offset)
@@ -64,7 +61,7 @@ func (s *inlineSearch) Handle(update bot.Update) () {
 			r.ThumbWidth = track.Album.Images[0].Width
 		}
 		r.InputMessageContent = bot.InputTextMessageContent{
-			Text: fmt.Sprintf("/%s %v", res.CmdAddSong, track.ID),
+			Text: fmt.Sprintf("/%s %v|%s", res.CmdAddSong, track.ID, track.Name),
 		}
 		results[i] = r
 	}

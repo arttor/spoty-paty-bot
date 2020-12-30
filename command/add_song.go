@@ -1,11 +1,13 @@
 package command
 
 import (
+	"fmt"
 	"github.com/arttor/spoty-paty-bot/res"
 	"github.com/arttor/spoty-paty-bot/state"
 	bot "github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/sirupsen/logrus"
 	"github.com/zmb3/spotify"
+	"strings"
 )
 
 type addSong struct {
@@ -25,16 +27,25 @@ func (s *addSong) Handle(update bot.Update) () {
 	if err != nil {
 		logrus.WithError(err).Error("Unable to delete message")
 	}
-	songID := update.Message.CommandArguments()
-	if songID == "" {
+	arg := update.Message.CommandArguments()
+	if arg == "" {
 		return
 	}
-	err = s.stateSvc.AddSong(update.Message.From, update.Message.Chat, spotify.ID(songID))
+	args := strings.Split(arg, "|")
+	if len(args) < 1 {
+		logrus.WithError(err).Error("Invalid addSong command arguments")
+		return
+	}
+	err = s.stateSvc.AddSong(update.Message.From, update.Message.Chat, spotify.ID(args[0]))
+	songName := ""
+	if len(args) > 1 {
+		songName = args[1]
+	}
 	var msg bot.MessageConfig
 	if err != nil {
 		msg = bot.NewMessage(update.Message.Chat.ID, err.Error())
 	} else {
-		msg = bot.NewMessage(update.Message.Chat.ID, res.TxtAddSongSuccess)
+		msg = bot.NewMessage(update.Message.Chat.ID, fmt.Sprintf(res.TxtAddSongSuccess, songName))
 	}
 	_, err = s.bot.Send(msg)
 	if err != nil {

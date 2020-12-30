@@ -11,7 +11,7 @@ const (
 	TxtFinishLoginSuccessPattern        = "Welcome! @%s is a DJ"
 	TxtNoDjError                        = "Party has no DJ. Someone should /login"
 	TxtAddSongToMuchSongsInQueuePattern = "Easy, @%s! It will be %v song in a row from you. DJ can use /settings command to increase max songs number."
-	TxtAddSongSuccess                   = "Song added to queue. Nice choice!"
+	TxtAddSongSuccess                   = "%s added to queue. Nice choice!"
 	TxtCallbackAddSongSuccess           = "Song added!"
 	TxtSearchSongSpotifyError           = "Spotify search song error"
 	TxtSearchSongNoSongsFoundError      = "No such song"
