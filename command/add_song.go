@@ -27,11 +27,7 @@ func (s *addSong) Handle(update bot.Update) () {
 	if err != nil {
 		logrus.WithError(err).Error("Unable to delete message")
 	}
-	arg := update.Message.CommandArguments()
-	if arg == "" {
-		return
-	}
-	args := strings.Split(arg, "|")
+	args := strings.Split(update.Message.CommandArguments(), "|")
 	if len(args) < 1 {
 		logrus.WithError(err).Error("Invalid addSong command arguments")
 		return

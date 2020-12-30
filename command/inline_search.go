@@ -61,7 +61,7 @@ func (s *inlineSearch) Handle(update bot.Update) () {
 			r.ThumbWidth = track.Album.Images[0].Width
 		}
 		r.InputMessageContent = bot.InputTextMessageContent{
-			Text: fmt.Sprintf("/%s %v|%s", res.CmdAddSong, track.ID, track.Name),
+			Text: fmt.Sprintf("/%s %s|%s", res.CmdAddSong, string(track.ID), track.Name),
 		}
 		results[i] = r
 	}
