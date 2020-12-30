@@ -26,10 +26,6 @@ func (s *inlineSearch) accepts(update bot.Update) bool {
 
 func (s *inlineSearch) Handle(update bot.Update) () {
 	query := update.InlineQuery
-	logrus.Warnf("===== %v", update.Message == nil)
-	if update.Message != nil {
-		logrus.Warnf("+++ %v", update.Message.Chat == nil)
-	}
 	client := s.searchSvc.GetClient()
 	if client == nil {
 		return
