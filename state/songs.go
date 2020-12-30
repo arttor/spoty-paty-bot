@@ -35,6 +35,17 @@ func (s *Service) AddSong(fromUser *bot.User, fromChat *bot.Chat, songID spotify
 	return nil
 }
 
+func (s *Service) HasDj(fromChat *bot.Chat) bool {
+	s.m.Lock()
+	defer s.m.Unlock()
+	chatID := fromChat.ID
+	chat, ok := s.mem[chatID]
+	if !ok || chat.DjID == 0 {
+		return false
+	}
+	return chat.DjClient != nil
+}
+
 func (s *Service) SearchSongs(fromChat *bot.Chat, searchQuery string) ([]spotify.FullTrack, error) {
 	s.m.RLock()
 	chat, ok := s.mem[fromChat.ID]

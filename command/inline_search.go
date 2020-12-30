@@ -21,11 +21,15 @@ type inlineSearch struct {
 }
 
 func (s *inlineSearch) accepts(update bot.Update) bool {
-	return update.InlineQuery != nil && (len([]rune(update.InlineQuery.Query)) > 3 )
+	return update.InlineQuery != nil && (len([]rune(update.InlineQuery.Query)) > 3)
 }
 
 func (s *inlineSearch) Handle(update bot.Update) () {
 	query := update.InlineQuery
+	logrus.Warnf("===== %v", update.Message == nil)
+	if update.Message != nil {
+		logrus.Warnf("+++ %v", update.Message.Chat == nil)
+	}
 	client := s.searchSvc.GetClient()
 	if client == nil {
 		return

@@ -32,7 +32,6 @@ func (s *addSong) Handle(update bot.Update) () {
 		logrus.WithError(err).Error("Invalid addSong command arguments")
 		return
 	}
-	logrus.Warn(update.Message.CommandArguments())
 	err = s.stateSvc.AddSong(update.Message.From, update.Message.Chat, spotify.ID(args[0]))
 	songName := ""
 	if len(args) > 1 {
