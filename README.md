@@ -15,8 +15,8 @@ This person will be a **DJ** and other people from the chat will queue songs to 
    You can take it back at any time with `/logout` command or in your [Spotify account settings](https://www.spotify.com/account/apps/) 
 3. Now everybody in the chat can add their favorite songs to **DJ's** playlist. 
    Just type `@SpotyPartyBot songname` and you will see suggested song results in the same way as you search GIFs.
-   *NOTE: DJ should start playing something on his Spotify device to make his device active. It will be not possible to add songs with no active device.*
-4. When the party is over **DJ** can `/logout` so nobody will be able to play songs on his/her device anymore.
+   *NOTE: DJ should start playing something on his Spotify device to make the device active. It will be not possible to add songs with no active device.*
+4. When the party is over **DJ** can `/logout` so nobody will be able to play songs on **DJ's** device anymore.
 ## Commands
 Command | Description
  --- | ------
